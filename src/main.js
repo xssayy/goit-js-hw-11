@@ -17,7 +17,7 @@ form.addEventListener('submit', e => {
       renderImages(res);
     })
     .then(() => {
-      initializeLightbox();
+      lightbox.refresh();
       loaderOff();
       e.target.reset();
       lightbox.refresh();
@@ -29,14 +29,22 @@ form.addEventListener('submit', e => {
 
 function getImages(searchRequestValue) {
   if (searchRequestValue.trim() === '') {
-    loaderOff();
-    iziToast.error({
-      title: 'Помилка',
-      message: 'Поле не може бути порожнім.',
-      position: 'topRight',
+    return new Promise((resolve, reject) => {
+      reject(() => {
+        throw new Error();
+      });
+    }).catch(() => {
+      loaderOff();
+      iziToast.error({
+        title: 'Помилка',
+        message: 'Поле не може бути порожнім.',
+        position: 'topRight',
+      });
+
+      gallery.innerHTML = '';
     });
-    return;
   }
+
   const params = {
     key: '42321641-23e42709c41860fd235775557',
     q: `${searchRequestValue.trim()}`
@@ -106,13 +114,6 @@ function renderImages(searchRequestValue) {
   gallery.innerHTML = markup;
 }
 
-function initializeLightbox() {
-  var lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
-}
-
 function loaderOff() {
   loader.classList.add('is-hidden');
 }
@@ -120,3 +121,8 @@ function loaderOff() {
 function loaderOn() {
   loader.classList.remove('is-hidden');
 }
+
+var lightbox = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
