@@ -14,6 +14,7 @@ form.addEventListener('submit', e => {
   loaderOn();
   getImages(searchRequestValue)
     .then(res => {
+      gallery.innerHTML = '';
       renderImages(res);
     })
     .then(() => {
@@ -36,8 +37,6 @@ function getImages(searchRequestValue) {
           message: 'Поле не може бути порожнім.',
           position: 'topRight',
         });
-
-        gallery.innerHTML = '';
       }
     );
   }
