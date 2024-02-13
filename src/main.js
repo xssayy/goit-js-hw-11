@@ -17,7 +17,6 @@ form.addEventListener('submit', e => {
       renderImages(res);
     })
     .then(() => {
-      lightbox.refresh();
       loaderOff();
       e.target.reset();
       lightbox.refresh();
@@ -29,20 +28,18 @@ form.addEventListener('submit', e => {
 
 function getImages(searchRequestValue) {
   if (searchRequestValue.trim() === '') {
-    return new Promise((resolve, reject) => {
-      reject(() => {
-        throw new Error();
-      });
-    }).catch(() => {
-      loaderOff();
-      iziToast.error({
-        title: 'Помилка',
-        message: 'Поле не може бути порожнім.',
-        position: 'topRight',
-      });
+    return Promise.reject(new Error('Поле не може бути порожнім.')).catch(
+      err => {
+        loaderOff();
+        iziToast.error({
+          title: 'Помилка',
+          message: 'Поле не може бути порожнім.',
+          position: 'topRight',
+        });
 
-      gallery.innerHTML = '';
-    });
+        gallery.innerHTML = '';
+      }
+    );
   }
 
   const params = {
